@@ -5,18 +5,19 @@ const library = document.getElementById("library");
 
 updateBookLibrary();
 
-function Book(title, author, pages) {
-  if (!new.target) {
-    throw Error("Book must be called with new");
+class Book {
+  constructor(title, author, pages, isRead) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.isRead = isRead;
+
+    this.id = crypto.randomUUID();
   }
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.id = crypto.randomUUID();
 }
 
-function addBookToLibrary(title, author, pages) {
-  let book = new Book(title, author, pages);
+function addBookToLibrary(title, author, pages, isRead) {
+  let book = new Book(title, author, pages, isRead);
   myLibrary.push(book);
   localStorage.setItem("library", JSON.stringify(myLibrary));
 }
@@ -26,6 +27,10 @@ function updateBookLibrary() {
   myLibrary.forEach(function (book) {
     const bookDiv = document.createElement("div");
     bookDiv.setAttribute("data-book-id", book.id);
+    bookDiv.classList.add("book");
+
+    const bookInfoDiv = document.createElement("div");
+    bookInfoDiv.classList.add("bookInfo");
 
     const bookDivTitle = document.createElement("h3");
     bookDivTitle.textContent = book.title;
@@ -34,11 +39,34 @@ function updateBookLibrary() {
     bookDivAuthor.textContent = book.author;
 
     const bookDivPages = document.createElement("p");
-    bookDivPages.textContent = book.pages;
+    bookDivPages.textContent = "Pages: " + book.pages;
+
+    const bookButtonsDiv = document.createElement("div");
+    bookButtonsDiv.classList.add("bookButtons");
 
     const deleteBookButton = document.createElement("button");
-    deleteBookButton.textContent = "Delete";
-    deleteBookButton.className = "deleteBookButton";
+    deleteBookButton.textContent = "x";
+    deleteBookButton.classList.add("deleteBookButton");
+
+    const readToggleButton = document.createElement("button");
+
+    if (book.isRead) {
+      readToggleButton.textContent = "Read";
+      console.log(readToggleButton.classList);
+
+      readToggleButton.classList.add("read");
+      console.log(readToggleButton.classList);
+    } else {
+      readToggleButton.textContent = "Not Read";
+      readToggleButton.classList.add("notRead");
+    }
+    readToggleButton.classList.add("readToggleButton");
+    readToggleButton.onclick = function () {
+      book.isRead = !book.isRead;
+      localStorage.setItem("library", JSON.stringify(myLibrary));
+      updateBookLibrary();
+    };
+
     deleteBookButton.onclick = function () {
       console.log(book);
       myLibrary = myLibrary.filter(function (b) {
@@ -48,10 +76,14 @@ function updateBookLibrary() {
       updateBookLibrary();
     };
 
-    bookDiv.appendChild(bookDivTitle);
-    bookDiv.appendChild(bookDivAuthor);
+    bookInfoDiv.appendChild(bookDivTitle);
+    bookInfoDiv.appendChild(bookDivAuthor);
+    bookButtonsDiv.appendChild(readToggleButton);
+    bookButtonsDiv.appendChild(deleteBookButton);
+
+    bookDiv.appendChild(bookInfoDiv);
     bookDiv.appendChild(bookDivPages);
-    bookDiv.appendChild(deleteBookButton);
+    bookDiv.appendChild(bookButtonsDiv);
 
     library.appendChild(bookDiv);
   });
@@ -72,8 +104,10 @@ submitBookButton.addEventListener("click", function () {
   const bookTitle = formData.get("title");
   const bookAuthor = formData.get("author");
   const bookPages = formData.get("pages");
+  const isBookRead = formData.get("isBookRead") ? true : false;
   if (form.reportValidity()) {
-    addBookToLibrary(bookTitle, bookAuthor, bookPages);
+    console.log(formData.get("isBookRead"));
+    addBookToLibrary(bookTitle, bookAuthor, bookPages, isBookRead);
     console.log(myLibrary);
     updateBookLibrary();
     form.reset();

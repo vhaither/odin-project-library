@@ -5,29 +5,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Book Library</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-    <div>
+    <div id="header">
         <h1>My Library</h1>
         <button id="addBook">Add Book</button>
     </div>
     <dialog id="dialog">
         <form id="addBookForm">
             <legend>Add a Book</legend>
-            <label for="title">Book Name:</label>
-            <input name="title" type="text" id="title" required>
-            <label for="author">Author Name:</label>
-            <input name="author" type="text" id="author" required>
-            <label for="pages">Pages Read:</label>
-            <input name="pages" type="number" id="pages" required>
+            <div class="inputDiv">
+                <label for="title">Book Name:</label>
+                <input name="title" type="text" id="title" required>
+            </div>
+
+            <div class="inputDiv">
+                <label for="author">Author Name:</label>
+                <input name="author" type="text" id="author" required>
+            </div>
+
+            <div class="inputDiv">
+                <label for="pages">Pages Read:</label>
+                <input name="pages" type="number" id="pages" required>
+            </div>
+
+            <div class="checkboxInput"> <label for="isBookRead">Already read?</label>
+                <input type="checkbox" id="isBookRead" name="isBookRead" value=true>
+            </div>
+
+
             <button type="button" id="submitBook"> Add Book</button>
             <button type="button" id="cancelForm"> Cancel</button>
         </form>
     </dialog>
     <div id="library"></div>
     <script src="./script.js"></script>
-    <style src="./style.css"></style>
 </body>
 
 </html>
