@@ -175,3 +175,8 @@ button#addBook {
     background-color: darkred;
     color: white
 }
+
+legend {
+    font-size: larger;
+    font-weight: bold;
+}
